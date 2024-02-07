@@ -1,0 +1,68 @@
+/* Emma Slowinski
+ * CPSC 24500-01; Object Oriented Programming, Section 1
+ * Feburary 11, 2024
+ * The purpose of this assignment is to write a program to compute
+ * the amount of income tax for a given employee and looks as follows:
+ * An employee has J$4000 of salary tax free
+ * the next J$1500 is taxed at 10%, the next j$28000 is taxed at 20%
+ * any further amount is taxed at 40%
+ */
+import java.util.Scanner;
+public class Assignment2 {
+	
+	public static int incomeTax(int income) {
+		//variables for tax brackets
+		int taxFree = 4000;
+		int firstBracket = 1500;
+		int secondBracket = 28000;
+		int tax = 0;
+		
+		//no tax for salary up to j$4000
+		if (income <= taxFree) {
+			return 0;
+		} else {
+			income  -= taxFree; // subtract tax free limit
+		}
+		
+		//next first bracket limit
+		if(income <= firstBracket) {
+			tax += income * 0.10; //10% for the next j$1500
+		} else {
+			tax += firstBracket * 0.10;
+			income -= firstBracket;
+		
+			//second bracket limit
+			if(income <= secondBracket) {
+				tax += income * 0.20;// 20% for the j$28000
+			} else {
+				tax += secondBracket * 0.20;
+				income -= secondBracket;
+			
+				//40% tax
+				tax += income * 0.40; // 40% for anything else
+		}
+	}
+	return tax;
+}
+	public static void main(String[] args) {
+		//asks user for name and save as variable
+		Scanner sc = new Scanner(System.in);
+		System.out.print("Enter Your Name: ");
+		String name = sc.nextLine();
+		
+		//asks user for Income to determine tax bracket
+		System.out.print("Enter Income:");
+		double result = sc.nextDouble();
+		int income= (int) result;
+		if(income <0) {
+			System.out.println("Invalid input, income should be zero or more");
+			System.exit(0);
+		}
+		
+		//prints name, income, and tax
+		System.out.println("Name: " + name);
+		System.out.println("Income: " + income);
+		System.out.println("Income Tax: " + incomeTax(income));
+		sc.close();
+	}
+}
