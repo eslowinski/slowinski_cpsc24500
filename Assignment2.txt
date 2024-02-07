@@ -9,7 +9,6 @@
  */
 import java.util.Scanner;
 public class Assignment2 {
-	
 	public static int incomeTax(int income) {
 		//variables for tax brackets
 		int taxFree = 4000;
