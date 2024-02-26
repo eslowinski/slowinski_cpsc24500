@@ -1,0 +1,169 @@
+import java.util.Scanner;
+import java.util.Random;
+
+/**
+ * @author emmas
+ * This class is a Rock, Paper Scissors game where the user plays against the computer
+ * 
+ */
+public class Assignment3 {
+	/**
+	 *Prints Welcome Message 
+	 */
+	public static void welcomeMessage() {
+		//prints welcome message
+		System.out.println("Hello! Today we will be playing the childhood game of Rock, Paper, Scissors");
+		System.out.println("The rule are you pick a number 1-3 with 1 being Rock, 2 being Paper, and 3 being Scissors");
+		System.out.println("You win if your choice beats mine!");
+		System.out.println("As you remember, rock beats scissors, scissors beat paper, and paper beats rock!");
+		System.out.println("And in case of a tie... we keep playing until one person wins!");
+	}
+	
+	/**
+	 * Determines userChoice and validation
+	 * @return uChoice as a number 1-3;
+	 */
+	public static int getUserChoice() {
+		Scanner sc = new Scanner(System.in);
+		
+		//user picks number to determine pick. By setting it too zero, helps determine invalid choice
+		int uChoice = 0;
+		System.out.print("Pick a Number to determine Rock(1) Paper(2) Scissors(3):") ;
+		
+		//do loop for input
+		do {
+			
+			//while loop to determine invalid input if not a number
+			while(!sc.hasNextInt()) {
+				System.out.print("That's not a valid choice. Please pick again: ");
+				sc.next();
+				System.out.print("Enter your choice (1-3): ");
+			}
+			// determines if number is outside range
+			uChoice = sc.nextInt();
+			
+			if (uChoice <1 || uChoice > 3) {
+				System.out.print("Invalid choice. Please pick again: ");		
+			}
+			
+		//while loop to return choice in range of 1-3
+		} while(uChoice < 1 || uChoice >3);
+			return uChoice;
+	}
+	
+	/**
+	 * Returns random number 1-3 for computerChoice
+	 * @return random number
+	 */
+	public static int getComputerChoice() {
+		//returns random number for computer choice
+		Random rd = new Random();
+		return rd.nextInt(3) + 1;
+	}
+	
+	/**
+	 * Displays choices by using an array to determine Rock, Paper or Scissors for integer stored
+	 * 
+	 * @param userChoice
+	 * @param computerChoice
+	 * 
+	 * @precondition userChoice and computerChoice are valid;  1-3
+	 * @postcondition userChoice and computerChoice are displayed
+	 */
+	public static void displayChoices( int userChoice, int computerChoice) {
+		//makes user input 1-3 match array indices 0-2
+		userChoice--;
+		computerChoice--;
+		
+		//makes array for choices
+		String[] choices = {"Rock", "Paper", "Scissors"};
+		
+		//prints choices for user and computer
+		System.out.println("Your choice: " + choices[userChoice]);
+		System.out.println("Computer's choice: " + choices[computerChoice]);
+	}
+	
+	/**
+	 * Determines winner based off inputs
+	 * 
+	 * @param userChoice
+	 * @param computerChoice
+	 * @precondition userChoice and computerChoice are valid; 1-3
+	 * @postcondition winner is determined on userChoice and computerChoice inputs
+	 */
+	public static void determineWinner(int userChoice, int computerChoice) {
+		//makes user inputs 1-3 match array indices 0-2 to determine tie, winner, or loser
+		userChoice--;
+		computerChoice--;
+		
+		//if tie, game is play again until winner or loser
+		if (userChoice == computerChoice) {
+			System.out.println("It is a tie!");
+			Gametime();
+		
+		// Determines user winner based off of Rock(0) beats Scissors(2)
+		} else if (userChoice == 0 && computerChoice ==2) {
+			System.out.println("You won!");
+			
+		// Determines user winner based off of Paper(1) beats Rock (0)
+		} else if (userChoice == 1 && computerChoice ==0) {
+			System.out.println("You won!");
+		
+		// Determines user winner based off of Scissors(2) beats Paper(1)
+		} else if (userChoice == 2 && computerChoice ==1) {
+			System.out.println("You won!");
+			
+		// Determines computer win if non of the previous statement match
+		} else {
+			System.out.println("You lost! Computer wins!");
+		}
+	}
+	
+	/**
+	 * Plays the Game of Rock Paper Scissors by calling methods into single method
+	 */
+	public static void Gametime() {
+		//makes user choice method into variable to be able to return values
+		int userChoice = getUserChoice();
+		
+		//makes computer choice method into variable to be able to return values
+		int computerChoice = getComputerChoice();
+		
+		//method calls to display choice
+		displayChoices(userChoice, computerChoice);
+		
+		//method calls to determine winner
+		determineWinner(userChoice, computerChoice);
+	}
+	
+	/**
+	 * Includes welcome message and determines if game is played again
+	 */
+	public static void playGameAgain(){
+		Scanner sc = new Scanner(System.in);
+		//displays welcome message
+		welcomeMessage();
+
+		//determines if user want to play again, not case sensitive
+		boolean playAgain = true;
+		while( playAgain ) {
+			Gametime();
+			System.out.print("Do you want to play again? (Y/N):");
+			String userInput= sc.next();
+			if(!userInput.equalsIgnoreCase("Y")) {
+				playAgain = false;
+			}
+		}
+		System.out.println("Thank you for playing!");
+		sc.close();
+	}
+
+	/**
+	 * 
+	 * @param args is not used
+	 */
+	public static void main(String[] args) {
+		// calls the rock, paper scissors game
+		playGameAgain();	
+		}
+}
