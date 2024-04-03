@@ -1,140 +1,105 @@
-
 package a5;
-/** Class that represents a node in the xy coordinate
- * Includes:
- * - Three constructors: Default, copy, and a constructor that accepts two parameters for x and y
- * - Get and Set methods for X and Y
- * - Add method which ass given node to caller node
- * - Override toString method to return node as string
- * - Override equals method to check nodes for equality
- * @author emmas
- *
+/**
+ * Develop a class called Node, which represents a node in the xy-coordinate. The class contains the following:
+1.	Three constructors. 
+a.	Default, x and y are assumed to be zero
+b.	Copy Constructor
+c.	A constructor that accepts two parameters for x and y.
+2.	Get and Set methods for x and y.
+3.	Method add, which adds a given node o the caller node. The addition is performed simply by adding x,y from the parameter node to the caller node, respectively.
+4.	Override toString method to return a string that represents the Node
+5.	Override equals method to check for nodes equality. Two nodes are equal if they have the same values for x and y.
+Pre-conditions
+a.	Values of x and y should be in the range [-100,100]. 
+b.	When a constructor is given an invalid value for either x or y, an exception is thrown with a proper error message.
+c.	When a set method is given an invalid value, the current value of x or y (depending on whether you are calling setX or setY) is not changed, and an exception is thrown with a proper error message.
+d.	When calling add method, if the result is invalid, add is not performed and an Exception is thrown.
+Notes:
+•	Save your class in a package named a5. This is very important as I want to import the class and test it. 
+•	Avoid code duplication, you might call setter from the constructors, or call a constructor from another constructor. 
+•	Use constants (finals) for the numbers that restrict ranges. This will allow us to easily change these values in the future.
+•	All methods are documented with JavaDoc, use @override annotation for overridden methods.
+•	All data members are private. If you develop a method that is not part of the class interface (I already have one such method in mind), this method should be also private.
+
  */
-public class Node {
-	//Min and Max Value for range; does not change
-	private static final int minValue = -100;
-	private static final int maxValue = 100;
+public class Node implements INode {
 	
-	// x coordinate variable
-	private int x;
-	
-	//y coordinate variable
-	private int y;
-	
-	/**
-	 * Default constructor, initializes x and y to zero
-	 */
-	public Node() {
-		this(0,0);
+    private int x,y;
+
+    public Node() throws Exception{
+    	this( DEFAULT_X, DEFAULT_Y);
+    }
+    
+	public Node(int x, int y) throws Exception {
+		setX(x); setY(y);  //set to given values if valid
 	}
-	
-	/**
-	 * Constructor with given x and y coordinates
-	 * @param x coordinate
-	 * @param y coordinate
-	 * @throws IllegalArgumentException if x or y is not in the valid range
-	 */
-	public Node(int x, int y) throws IllegalArgumentException {
-		//trys to set x and y coordinates in node, of not Exception is thrown
-		try{
-			setX(x);
-			setY(y);
-		} catch (IllegalArgumentException e) {
-			throw new IllegalArgumentException("Invalid node coordinates: " + e.getMessage());
-		}
-		
-		
-	}
-	
 	/**
 	 * Copy constructor
-	 * @param other; the Node to copy
+	 * @param node
+	 * @throws Exception
 	 */
-	public Node(Node other) {
-		this(other.getX(), other.getY());
+	public Node(Node node) throws Exception {
+		setX(node.getX());
+		setY(node.getY());
 	}
-	
-	/**
-	 * get the x coordinate
-	 * @return the x coordinate
-	 */
+
+	private boolean isValidX(int x) {
+		if (x<=UPPER_LIMIT && x>=LOWER_LIMIT)
+			return true;
+		return false;
+	}
+	private boolean isValidY(int y) {
+		if (y<=UPPER_LIMIT && y>=LOWER_LIMIT)
+			return true;
+		return false;
+	}
 	public int getX() {
 		return x;
 	}
-	
-	/**
-	 * get the y coordinate
-	 * @return the y coordinate
-	 */
+
+	public void setX(int x) throws Exception {
+		if (isValidX(x))
+			this.x = x;
+		else
+		throw new Exception("Invalid operation: x value shoud be in the range: ["+LOWER_LIMIT+","+UPPER_LIMIT+"]");
+	}
+
 	public int getY() {
 		return y;
 	}
-	
-	/**
-	 * sets the x coordinate
-	 * @param x; the new x coordinate
-	 * @throws IllegalArgumentException if y is not in valid range
-	 */
-	public void setX(int x) throws IllegalArgumentException {
-		//if statement to make sure x is in range
-		if( x < minValue || x > maxValue) {
-			throw new IllegalArgumentException("X value is out of range");
-		}
-		this.x = x;
+
+	public void setY(int y) throws Exception {
+		if (isValidY(y))
+			this.y = y;
+		else
+		throw new Exception("Invalid operation: y value shoud be in the range: ["+LOWER_LIMIT+","+UPPER_LIMIT+"]");
+	}
+	public void add(Node node) throws Exception {
+		if (isValidX(this.x+node.getX()) && isValidY(this.y+node.getY()) ) {
+			this.x+=node.getX();
+			this.y+=node.getY();
+		}	else
+			throw new Exception("Invalid operation, the result exceeds the xy-space boundaries...");
 	}
 	
-	/**
-	 * Sets the y coordinate
-	 * @param y; the new y coordinate
-	 * @throws IllegalArgumentException if y is not in the valid range
-	 */
-	public void setY(int y) throws IllegalArgumentException {
-		//if statment to make sure y is in range
-		if( y < minValue || y > maxValue) {
-			throw new IllegalArgumentException("Y value is out of range");
-		}
-		this.y = y;
-	}
-	
-	/**
-	 * 
-	 * @param other; the node to add
-	 * @return; the resulting node after addition
-	 * @throws IllegalArgumentException if the resulting coordinates are not in range
-	 */
-	public Node add(Node other) throws IllegalArgumentException {
-		//adds node to other
-		int newX = this.x + other.getX();
-		int newY = this.y + other.getY();
-		
-		//determines if in range
-		if(newX < minValue || newX > maxValue || newY < minValue || newY > maxValue) {
-			throw new IllegalArgumentException("Addition result out of range");
-		}
-		return new Node(newX, newY);
-	}
-	
-	/**
-	 * Returns a string representation of the Node
-	 * @return a string representation of the node
-	 */
-	@Override
 	public String toString() {
-		//string
-		return "(" + x + "," + y + ")";
+		return "("+this.x+","+this.y+")";
 	}
-	
-	/**
-	 * Checks if two nodes are equal
-	 * @param obj; the object to compare
-	 * @returns True if the nodes are equal, false if not
-	 */
-	@Override
 	public boolean equals(Object obj) {
-		// if both are equal it is true, if they are not, returns fals
-		if(this == obj) return true;
-		if(obj == null || getClass() != obj.getClass()) return false;
-		Node node = (Node) obj;
-		return x == node.x && y ==node.y;
+		//to restrict call with only objects of type Node
+		if (obj instanceof Node) {
+			Node ref = (Node) obj;
+			if (this.x==ref.x && this.y == ref.y)
+				return true;
+			return false;
+		}
+		return false;
 	}
-}
+
+	@Override
+	public int compareTo(Object o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+   
+} //class Node
